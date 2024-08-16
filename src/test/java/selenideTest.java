@@ -36,9 +36,10 @@ public class selenideTest {
     $(byXpath("//p[@id='currentAddress']")).shouldHave(text("mars"));
     $(byXpath("//p[@id='permanentAddress']")).shouldHave(text("forest"));
   }
+
   @Test
   @DisplayName("Открытие новой вкладки")
-  void OpeningANewTab(){
+  void OpeningANewTab() {
     $(byXpath("//div[@class='category-cards']/div[3]")).click();
     $(byXpath("//li[@class='btn btn-light active']")).click();
     $(byXpath("//button[@id='tabButton")).click();
