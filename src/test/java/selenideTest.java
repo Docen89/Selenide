@@ -1,10 +1,14 @@
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byXpath;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.switchTo;
+import static com.codeborne.selenide.files.DownloadActions.click;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.openqa.selenium.remote.tracing.EventAttribute.setValue;
 
+import com.codeborne.selenide.Configuration;
 import jdk.jfr.Name;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,32 +22,36 @@ public class selenideTest {
   @BeforeEach
   void setup() {
     open("http://demoqa.com/");
+    Configuration.pageLoadStrategy = "eager";
+    Configuration.browserSize = "1920x1080";
   }
 
   @CsvSource(value = {"Taras,test@bk.ru, mars, forest"})
   @ParameterizedTest(name = "Проверка заполнения полей userName,userEmail,currentAddress,permanentAddress")
   void CheckingTheFieldsUserNameUserEmailCurrentAddressPermanentAddress(String UserName,
       String UserEmail, String CurrentAddress, String PermanentAddress) {
-    $(byXpath("//div[@class='card mt-4 top-card']")).click();
-    $(byXpath("//li[@id='item-0']")).click();
-    $(byXpath("//input[@id='userName']")).setValue(UserName);
-    $(byXpath("//input[@id='userEmail']")).setValue(UserEmail);
-    $(byXpath("//textarea[@id='currentAddress']")).setValue(CurrentAddress);
-    $(byXpath("//textarea[@id='permanentAddress']")).setValue(PermanentAddress);
-    $(byXpath("//button[@id='submit']")).click();
-    $(byXpath("//p[@id='name']")).shouldHave(text("Taras"));
-    $(byXpath("//p[@id='email']")).shouldHave(text("test@bk.ru"));
-    $(byXpath("//p[@id='currentAddress']")).shouldHave(text("mars"));
-    $(byXpath("//p[@id='permanentAddress']")).shouldHave(text("forest"));
+    $x("//div[@class='category-cards']/div[position()=1]").click();
+    $x("//li[@id='item-0']").click();
+    $x("//input[@id='userName']").setValue(UserName);
+    $x("//input[@id='userEmail']").setValue(UserEmail);
+    $x("//textarea[@id='currentAddress']").setValue(CurrentAddress);
+    $x("//textarea[@id='permanentAddress']").setValue(PermanentAddress);
+    $x("///button[@id='submit']").scrollIntoView(true).click();
+    $x("//button[@id='submit']").click();
+    $x("//p[@id='name']").shouldHave(text("Taras"));
+    $x("//p[@id='email']").shouldHave(text("test@bk.ru"));
+    $x("//p[@id='currentAddress']").shouldHave(text("mars"));
+    $x("//p[@id='permanentAddress']").shouldHave(text("forest"));
   }
 
   @Test
   @DisplayName("Открытие новой вкладки")
   void OpeningANewTab() {
-    $(byXpath("//div[@class='category-cards']/div[3]")).click();
-    $(byXpath("//li[@class='btn btn-light active']")).click();
-    $(byXpath("//button[@id='tabButton")).click();
+    $x("//div[@class='category-cards']/div[position()=3]").click();
+    $x("//span[text()='Browser Windows']").click();
+    $x("//span[text()='Browser Windows']").click();
+    $x("//button[text()='New Tab']").click();
     switchTo().window(1);
-    $(byXpath("//h1[@id='sampleHeading']")).shouldHave(text("This is a sample page"));
+    $x("//h1[@id='sampleHeading']").shouldHave(text("This is a sample page"));
   }
 }
